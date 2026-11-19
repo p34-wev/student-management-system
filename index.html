@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <title>Student Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <section class="login-backdrop" id="login-screen" hidden>
+      <div class="login-card">
+        <a class="brand login-brand" href="/" aria-label="Campus home">
+          <span class="brand-mark">C</span>
+          <span>campus<span class="brand-dot">.</span></span>
+        </a>
+        <div class="eyebrow"><span class="eyebrow-dot"></span> ACCOUNT ACCESS</div>
+        <h1 id="auth-title">Sign in</h1>
+        <p class="login-copy" id="auth-copy">Sign in to manage your private student records, or create a new account.</p>
+        <form id="login-form">
+          <label class="field" for="auth-email">Email address</label>
+          <input class="auth-email" id="auth-email" type="email" required maxlength="254" autocomplete="email" placeholder="you@example.com" />
+          <label class="field auth-password-label" for="admin-password" id="auth-password-label">Password</label>
+          <div class="password-input">
+            <input id="admin-password" type="password" required minlength="12" maxlength="256" autocomplete="current-password" />
+            <button class="password-toggle" id="toggle-admin-password" type="button" aria-label="Show password" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                <circle cx="12" cy="12" r="2.5"></circle>
+              </svg>
+            </button>
+          </div>
+          <div class="form-error" id="login-error" role="alert"></div>
+          <button class="primary-button login-submit" id="login-submit" type="submit">Sign in</button>
+        </form>
+        <button class="auth-switch" id="auth-switch" type="button">New here? Create an account</button>
+        <p class="auth-privacy">Each account can only view and manage its own student records.</p>
+      </div>
+    </section>
+
+    <div class="app-shell" id="app-shell" hidden>
+      <aside class="sidebar">
+        <a class="brand" href="/" aria-label="Campus home">
+          <span class="brand-mark">C</span>
+          <span>campus<span class="brand-dot">.</span></span>
+        </a>
+        <div class="workspace-label">WORKSPACE</div>
+        <nav aria-label="Main navigation">
+          <a class="nav-link" href="#students" data-page="students"><span class="nav-icon">▦</span>Students</a>
+          <a class="nav-link" href="#overview" data-page="overview"><span class="nav-icon">◫</span>Overview</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="help-card">
+            <div class="help-icon">?</div>
+            <strong>Need a hand?</strong>
+            <p>Manage your student records with ease.</p>
+          </div>
+          <div class="profile">
+            <div class="avatar profile-avatar">AD</div>
+            <div><strong id="profile-label">Account</strong><span id="profile-email"></span></div>
+            <span class="profile-menu">···</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumb">Workspace <span>/</span> <strong>Students</strong></div>
+          <div class="topbar-right">
+            <span class="connection-status" id="database-status" data-state="checking" role="status" aria-live="polite">
+              <span class="connection-dot" aria-hidden="true"></span>
+              <span class="connection-label">Checking database...</span>
+            </span>
+            <button class="logout-button" id="logout-button" type="button" hidden>Sign out</button>
+            <span class="today" id="today-label"></span>
+            <button class="icon-button" type="button" aria-label="Notifications">♧<i></i></button>
+            <div class="avatar top-avatar">AD</div>
+          </div>
+        </header>
+
+        <section id="overview" class="page-view" hidden>
+          <section class="page-heading">
+            <div>
+              <div class="eyebrow"><span class="eyebrow-dot"></span> OVERVIEW</div>
+              <h1>Overview</h1>
+              <p class="subtitle">A quick look at student enrollment across your school.</p>
+            </div>
+            <a class="secondary-button overview-link" href="#students">View student directory <span>→</span></a>
+          </section>
+
+          <section class="stats-grid" aria-label="Student summary">
+            <article class="stat-card">
+              <div class="stat-top"><span>Total students</span><span class="stat-icon blue">♙</span></div>
+              <div class="stat-value" id="total-count">—</div>
+              <div class="stat-note">Across all courses</div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span>Active students</span><span class="stat-icon green">✓</span></div>
+              <div class="stat-value" id="active-count">—</div>
+              <div class="stat-note">Currently enrolled</div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span>Courses</span><span class="stat-icon purple">▤</span></div>
+              <div class="stat-value" id="course-count">—</div>
+              <div class="stat-note">Unique courses</div>
+            </article>
+          </section>
+
+          <section class="performance-summary" aria-label="Academic performance summary">
+            <article class="stat-card performance-stat"><div class="stat-top"><span>Overall average</span><span class="stat-icon green">%</span></div><div class="stat-value" id="overall-average">—</div><div class="stat-note">Across students with marks</div></article>
+            <article class="stat-card performance-stat"><div class="stat-top"><span>Top performer</span><span class="stat-icon purple">★</span></div><div class="top-performer" id="top-performer">No marks yet</div><div class="stat-note">Highest average percentage</div></article>
+          </section>
+
+          <section class="chart-card" aria-labelledby="course-chart-title">
+            <div class="chart-heading">
+              <div>
+                <h2 id="course-chart-title">Students by course</h2>
+                <p>Enrollment count across your courses.</p>
+              </div>
+              <div class="chart-total"><span id="chart-total">0</span><span>total students</span></div>
+            </div>
+            <div id="course-chart" class="course-chart" role="list" aria-label="Student count by course"></div>
+          </section>
+        </section>
+
+        <section id="students" class="page-view">
+          <section class="page-heading">
+            <div>
+              <div class="eyebrow"><span class="eyebrow-dot"></span> STUDENT DIRECTORY</div>
+              <h1>Students</h1>
+              <p class="subtitle">Manage student records, keep details up to date, and find anyone in a moment.</p>
+            </div>
+            <button class="primary-button" id="add-student-button" type="button"><span>＋</span> Add student</button>
+          </section>
+          <section class="directory-card">
+            <div class="directory-heading">
+              <div>
+                <h2>All students <span class="count-pill" id="visible-count">0</span></h2>
+                <p>A complete list of your student records.</p>
+              </div>
+              <div class="list-tools">
+                <label class="search-box">
+                  <span aria-hidden="true">⌕</span>
+                  <input id="search-input" type="search" placeholder="Search students..." aria-label="Search students" />
+                  <kbd>⌘ K</kbd>
+                </label>
+                <label class="filter-select">
+                  <span class="sr-only">Filter by status</span>
+                  <select id="status-filter">
+                    <option value="all">All students</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" aria-label="Select all students" disabled /></th>
+                    <th>STUDENT</th>
+                    <th>STUDENT ID</th>
+                    <th>COURSE</th>
+                    <th>ENROLLED</th>
+                    <th>STATUS</th>
+                    <th><span class="sr-only">Actions</span></th>
+                  </tr>
+                </thead>
+                <tbody id="student-rows"></tbody>
+              </table>
+              <div class="empty-state" id="empty-state" hidden>
+                <div class="empty-icon">⌕</div>
+                <h3>No students found</h3>
+                <p>Try changing your search or add a new student record.</p>
+                <button class="text-button" id="empty-add-button" type="button">＋ Add a student</button>
+              </div>
+              <div class="loading-state" id="loading-state">Loading student records<span class="loading-dots">...</span></div>
+            </div>
+            <footer class="table-footer">
+              <span id="results-label">Showing 0 students</span>
+              <div class="pagination"><button type="button" disabled aria-label="Previous page">‹</button><span>1</span><button type="button" disabled aria-label="Next page">›</button></div>
+            </footer>
+          </section>
+        </section>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="student-modal" hidden>
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-heading">
+          <div><div class="eyebrow"><span class="eyebrow-dot"></span> STUDENT RECORD</div><h2 id="modal-title">Add student</h2></div>
+          <button class="close-button" id="close-modal" type="button" aria-label="Close dialog">×</button>
+        </div>
+        <p class="modal-intro" id="modal-intro">Add a student to your directory by entering their details below.</p>
+        <form id="student-form">
+          <input type="hidden" id="student-id" />
+          <div class="form-grid">
+            <label class="field full-width">Full name <span>*</span><input id="full-name" name="full_name" required maxlength="120" placeholder="e.g. Alex Morgan" autocomplete="name" /></label>
+            <label class="field">Email address <span>*</span><input id="email" name="email" type="email" required maxlength="254" placeholder="alex@example.com" autocomplete="email" /></label>
+            <label class="field">Phone number<input id="phone" name="phone" maxlength="30" placeholder="+1 (555) 000-0000" autocomplete="tel" /></label>
+            <label class="field">Course <span>*</span><input id="course" name="course" required maxlength="120" placeholder="e.g. Computer Science" /></label>
+            <label class="field">Enrollment date <span>*</span><input id="enrollment-date" name="enrollment_date" type="date" required /></label>
+            <label class="field">Status <span>*</span><select id="student-status" name="status" required><option value="Active">Active</option><option value="Inactive">Inactive</option></select></label>
+            <label class="field">Mathematics marks<input id="mathematics-marks" name="mathematics_marks" type="number" min="0" max="100" step="0.01" placeholder="Out of 100" /></label>
+            <label class="field">Science marks<input id="science-marks" name="science_marks" type="number" min="0" max="100" step="0.01" placeholder="Out of 100" /></label>
+            <label class="field">English marks<input id="english-marks" name="english_marks" type="number" min="0" max="100" step="0.01" placeholder="Out of 100" /></label>
+          </div>
+          <div class="form-error" id="form-error" role="alert"></div>
+          <div class="modal-actions"><button class="secondary-button" id="cancel-modal" type="button">Cancel</button><button class="primary-button" id="save-student" type="submit">Add student</button></div>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="details-modal" hidden>
+      <section class="modal details-modal" role="dialog" aria-modal="true" aria-labelledby="details-title">
+        <div class="modal-heading">
+          <div><div class="eyebrow"><span class="eyebrow-dot"></span> STUDENT PROFILE</div><h2 id="details-title">Student details</h2></div>
+          <button class="close-button" id="close-details" type="button" aria-label="Close dialog">×</button>
+        </div>
+        <div id="details-content"></div>
+        <section class="verification-card" aria-labelledby="verification-heading">
+          <div class="verification-copy">
+            <div class="verification-icon">✓</div>
+            <div>
+              <h3 id="verification-heading">Aadhaar verification</h3>
+              <p id="verification-status">Not verified</p>
+            </div>
+          </div>
+          <p class="verification-disclaimer">Demo only. No Aadhaar number or OTP is collected; this does not verify Aadhaar identity.</p>
+          <button class="secondary-button" id="demo-verification-button" type="button">Run demo only</button>
+        </section>
+      </section>
+    </div>
+
+    <section class="assistant-widget" aria-label="AI assistant" hidden>
+      <section class="assistant-panel" id="assistant-panel" aria-label="AI assistant chat" hidden>
+        <header class="assistant-header">
+          <div class="assistant-avatar">✦</div>
+          <div><strong>Campus assistant</strong><span id="assistant-connection">Checking assistant...</span></div>
+          <button class="assistant-close" id="assistant-close" type="button" aria-label="Close assistant">×</button>
+        </header>
+        <div class="assistant-privacy">For privacy, AI help questions go to OpenAI. Search student records locally with <code>/student name</code>; those searches are not sent to AI. Don’t enter personal student information in AI questions.</div>
+        <div class="assistant-messages" id="assistant-messages" role="log" aria-live="polite">
+          <div class="chat-message assistant-message">Hi! I can help explain how to use this student manager. To search records privately, type <code>/student name</code>.</div>
+        </div>
+        <form class="assistant-form" id="assistant-form">
+          <label class="sr-only" for="assistant-input">Ask the assistant</label>
+          <textarea id="assistant-input" rows="1" maxlength="2000" placeholder="Ask about using the app..." required></textarea>
+          <button class="assistant-send" id="assistant-send" type="submit" aria-label="Send message">↑</button>
+        </form>
+        <div class="assistant-footnote">AI answers can be inaccurate. Verify important information.</div>
+      </section>
+      <button class="assistant-launcher" id="assistant-launcher" type="button" aria-expanded="false" aria-controls="assistant-panel">
+        <span>✦</span> AI assistant
+      </button>
+    </section>
+  </body>
+</html>
