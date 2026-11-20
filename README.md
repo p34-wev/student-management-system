@@ -144,6 +144,7 @@ On first startup after the account migration, unowned existing records are assig
 </details>
 
 ## Railway deployment
+ live demo -https://student-management-system-production-2743b4fe.up.railway.app/
 
 This repository is connected to Railway and deploys from the `main` branch.
 
