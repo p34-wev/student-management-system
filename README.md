@@ -1,9 +1,16 @@
-🎓 Student Management System
+Student Management System
+A full-stack Student Management System built with HTML, CSS, JavaScript, Node.js, Express and MySQL. It supports complete CRUD (Create, Read, Update, Delete) operations with a modern dashboard UI.
 
-🚀 Smart | Interactive | Secure | Responsive
-
-A modern, full-stack Student Management System designed to simplify student data management through an interactive dashboard, real-time search, course analytics and secure account management.
-
+Features
+🔐 Admin login with session-based authentication (protected API + pages)
+📊 Dashboard with live stats (total students, active students, courses, average score)
+➕ Add new students
+📋 View / list students with search, course & status filters and pagination
+✏️ Edit existing students
+🗑️ Delete students with confirmation
+🧮 Mathematics / Science / English marks with per-student average score
+✅ Server-side validation and duplicate email handling
+📱 Responsive layout
 🌟 Live Demo
 
 🔗 "Open Student Management System" (https://student-management-system-production-2743b4fe.up.railway.app)
